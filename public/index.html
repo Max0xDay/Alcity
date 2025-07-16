@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Cheese Greater Stats</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+  <div id="background-animation"></div>
+  
+  <div class="container">
+    <h1>The Cheese Greater Stats</h1>
+    
+    <div class="main-tabs">
+      <button class="main-tab-button active" data-tab="metrics">System Metrics</button>
+      <button class="main-tab-button" data-tab="logs">Service Logs</button>
+    </div>
+    
+    <div id="metrics-section" class="tab-section active">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <h3>CPU Usage</h3>
+          <div class="chart-container">
+            <canvas id="cpu-chart"></canvas>
+          </div>
+          <div class="metric-info">
+            <div id="cpu-current">Current: 0%</div>
+            <div id="cpu-avg">Average: 0%</div>
+          </div>
+        </div>
+        
+        <div class="metric-card">
+          <h3>Memory Usage</h3>
+          <div class="chart-container">
+            <canvas id="memory-chart"></canvas>
+          </div>
+          <div class="metric-info">
+            <div id="memory-current">Current: 0%</div>
+            <div id="memory-total">Total: 0 GB</div>
+          </div>
+        </div>
+                
+        <div class="metric-card full-width">
+          <h3>Network Interface</h3>
+          <div class="network-selector">
+            <label for="interface-select">Interface:</label>
+            <select id="interface-select"></select>
+          </div>
+          <div class="chart-container">
+            <canvas id="network-chart"></canvas>
+          </div>
+          <div class="metric-info">
+            <div id="network-rx">Download: 0 KB/s</div>
+            <div id="network-tx">Upload: 0 KB/s</div>
+          </div>
+        </div>
+
+        <div class="metric-card full-width">
+          <h3>Drive Information</h3>
+          <div id="disks-container" class="disks-grid">
+            <div class="loading-spinner">Loading drive information...</div>
+          </div>
+        </div>
+        
+        <div class="metric-card full-width">
+          <h3>System Temperatures</h3>
+          <div class="temperature-selector">
+            <label for="temp-type-select">Chart View:</label>
+            <select id="temp-type-select">
+              <option value="all">All Components</option>
+              <option value="cpu">CPU Only</option>
+              <option value="gpu">GPU Only</option>
+              <option value="system">System Only</option>
+              <option value="drives">Drives Only</option>
+            </select>
+          </div>
+          <div class="chart-container">
+            <canvas id="temperature-chart"></canvas>
+          </div>
+          <div id="temp-not-available" class="alert" style="display: none;">
+            <p>Temperature monitoring tools not found. Please install required tools:</p>
+            <pre>sudo apt-get install lm-sensors hddtemp smartmontools</pre>
+            <p>Then run sensors detection:</p>
+            <pre>sudo sensors-detect</pre>
+          </div>
+          <div class="metric-info">
+            <div id="temp-info">Components: -</div>
+            <div id="temp-max">Max Temperature: -</div>
+          </div>
+          <div id="temperature-categories"></div>
+        </div>
+      </div>
+      
+      <div class="refresh-container">
+        <button id="refresh-metrics-button">Refresh Metrics</button>
+        <span id="metrics-last-updated"></span>
+      </div>
+    </div>
+    
+    <div id="logs-section" class="tab-section">
+      <div class="tabs">
+        <button class="tab-button active" data-service="jellyfin">Jellyfin</button>
+        <button class="tab-button" data-service="sonarr">Sonarr</button>
+        <button class="tab-button" data-service="prowlarr">Prowlarr</button>
+        <button class="tab-button" data-service="radarr">Radarr</button>
+        <button class="tab-button" data-service="transmission-daemon">Transmission</button>
+        <button class="tab-button" data-service="fail2ban">Fail2ban</button>
+        <button class="tab-button" data-service="netdata">Netdata</button>
+        <button class="tab-button" data-service="unify">Unify</button>
+      </div>
+      
+      <div class="log-container">
+        <pre id="log-output">Loading logs...</pre>
+        <div class="refresh-container">
+          <button id="refresh-button">Refresh</button>
+          <span id="last-updated"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
