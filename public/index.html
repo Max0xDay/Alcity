@@ -12,12 +12,11 @@
         <header>
             <div class="header-content">
                 <div class="title-section">
-                    <h1>Alcity System Monitor</h1>
-                    <div class="subtitle">Real-time System Monitoring & Logs</div>
+                    <h1>Alcity</h1>
                 </div>
                 <div class="header-actions">
-                    <div id="auth-status" class="auth-status">Not authenticated</div>
-                    <button id="auth-button" class="btn btn-secondary">Login</button>
+                    <div id="auth-status" class="auth-status" style="display: none;">Not authenticated</div>
+                    <button id="auth-button" class="btn btn-secondary" style="display: none;">Login</button>
                 </div>
             </div>
         </header>
@@ -30,7 +29,7 @@
                         <div class="nav-arrow"></div>
                     </div>
                     <div class="nav-items expanded">
-                        <div class="nav-item active" onclick="showPanel('overview')">Overview</div>
+                        <div class="nav-item active" onclick="showPanel('dashboard')">Dashboard</div>
                         <div class="nav-item" onclick="showPanel('cpu')">CPU Monitor</div>
                         <div class="nav-item" onclick="showPanel('memory')">Memory</div>
                         <div class="nav-item" onclick="showPanel('network')">Network</div>
@@ -58,58 +57,27 @@
 
                 <div class="nav-section">
                     <div class="nav-header" onclick="toggleSection(this)">
-                        <h3>Settings</h3>
+                        <h3>Configuration</h3>
                         <div class="nav-arrow"></div>
                     </div>
                     <div class="nav-items">
-                        <div class="nav-item" onclick="showPanel('dashboard-config')">Dashboard Config</div>
-                        <div class="nav-item" onclick="showPanel('refresh-settings')">Refresh Settings</div>
+                        <div class="nav-item" onclick="showPanel('settings')">Settings</div>
                     </div>
                 </div>
             </nav>
 
             <main class="content-area">
-                <div id="overview" class="content-panel active">
-                    <h1 class="page-title">System Overview</h1>
-                    <div class="stats-grid" id="statsGrid">
-                        <div class="stat-card">
-                            <div class="stat-label">System Uptime</div>
-                            <div class="stat-value" id="system-uptime">Loading...</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">CPU Usage</div>
-                            <div class="stat-value" id="cpu-usage">0%</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Memory Usage</div>
-                            <div class="stat-value" id="memory-usage">0%</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Network Activity</div>
-                            <div class="stat-value" id="network-activity">0 KB/s</div>
+                <div id="dashboard" class="content-panel active">
+                    <div class="dashboard-header">
+                        <h1 class="page-title">Dashboard</h1>
+                        <div class="dashboard-controls">
+                            <button class="btn btn-secondary" onclick="showWidgetSelector()">Add Widget</button>
+                            <button class="btn btn-secondary" onclick="toggleEditMode()">Edit Layout</button>
+                            <button class="btn btn-secondary" onclick="resetDashboard()">Reset</button>
                         </div>
                     </div>
                     
-                    <div class="section-card">
-                        <div class="section-header">
-                            <h2>Real-time Monitoring</h2>
-                        </div>
-                        <div class="section-content">
-                            <div class="dashboard-grid" id="dashboardGrid">
-                                <div class="metric-card">
-                                    <h3>CPU Usage</h3>
-                                    <div class="chart-container">
-                                        <canvas id="overview-cpu-chart"></canvas>
-                                    </div>
-                                </div>
-                                <div class="metric-card">
-                                    <h3>Memory Usage</h3>
-                                    <div class="chart-container">
-                                        <canvas id="overview-memory-chart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div id="dashboard-grid" class="dashboard-grid">
                     </div>
                 </div>
 
@@ -231,7 +199,7 @@
 
                 <div id="jellyfin" class="content-panel log-panel">
                     <h1 class="page-title">Jellyfin Logs</h1>
-                    <div class="auth-required" style="display: none;">
+                    <div class="auth-required">
                         <div class="empty-state">
                             <h3>Authentication Required</h3>
                             <p>Please login to view application logs</p>
@@ -256,7 +224,7 @@
 
                 <div id="sonarr" class="content-panel log-panel">
                     <h1 class="page-title">Sonarr Logs</h1>
-                    <div class="auth-required" style="display: none;">
+                    <div class="auth-required">
                         <div class="empty-state">
                             <h3>Authentication Required</h3>
                             <p>Please login to view application logs</p>
@@ -281,7 +249,7 @@
 
                 <div id="prowlarr" class="content-panel log-panel">
                     <h1 class="page-title">Prowlarr Logs</h1>
-                    <div class="auth-required" style="display: none;">
+                    <div class="auth-required">
                         <div class="empty-state">
                             <h3>Authentication Required</h3>
                             <p>Please login to view application logs</p>
@@ -306,7 +274,7 @@
 
                 <div id="radarr" class="content-panel log-panel">
                     <h1 class="page-title">Radarr Logs</h1>
-                    <div class="auth-required" style="display: none;">
+                    <div class="auth-required">
                         <div class="empty-state">
                             <h3>Authentication Required</h3>
                             <p>Please login to view application logs</p>
@@ -331,7 +299,7 @@
 
                 <div id="transmission" class="content-panel log-panel">
                     <h1 class="page-title">Transmission Logs</h1>
-                    <div class="auth-required" style="display: none;">
+                    <div class="auth-required">
                         <div class="empty-state">
                             <h3>Authentication Required</h3>
                             <p>Please login to view application logs</p>
@@ -356,7 +324,7 @@
 
                 <div id="fail2ban" class="content-panel log-panel">
                     <h1 class="page-title">Fail2ban Logs</h1>
-                    <div class="auth-required" style="display: none;">
+                    <div class="auth-required">
                         <div class="empty-state">
                             <h3>Authentication Required</h3>
                             <p>Please login to view application logs</p>
@@ -381,7 +349,7 @@
 
                 <div id="netdata" class="content-panel log-panel">
                     <h1 class="page-title">Netdata Logs</h1>
-                    <div class="auth-required" style="display: none;">
+                    <div class="auth-required">
                         <div class="empty-state">
                             <h3>Authentication Required</h3>
                             <p>Please login to view application logs</p>
@@ -406,7 +374,7 @@
 
                 <div id="unify" class="content-panel log-panel">
                     <h1 class="page-title">Unify Logs</h1>
-                    <div class="auth-required" style="display: none;">
+                    <div class="auth-required">
                         <div class="empty-state">
                             <h3>Authentication Required</h3>
                             <p>Please login to view application logs</p>
@@ -429,62 +397,475 @@
                     </div>
                 </div>
 
-                <div id="dashboard-config" class="content-panel">
-                    <h1 class="page-title">Dashboard Configuration</h1>
-                    <div class="section-card">
-                        <div class="section-header">
-                            <h2>Widget Settings</h2>
-                        </div>
-                        <div class="section-content">
-                            <form id="dashboardConfigForm">
-                                <div class="form-row">
-                                    <div class="form-field">
-                                        <label>Chart Type</label>
-                                        <select id="chartType">
-                                            <option value="line">Line Chart</option>
-                                            <option value="bar">Bar Chart</option>
-                                            <option value="area">Area Chart</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-field">
-                                        <label>Update Interval (seconds)</label>
-                                        <input type="number" id="updateInterval" min="5" max="300" value="30">
-                                    </div>
-                                </div>
-                                <div class="button-group">
-                                    <button type="submit" class="btn btn-primary">Save Settings</button>
-                                    <button type="button" class="btn btn-secondary" onclick="resetDashboard()">Reset to Default</button>
-                                </div>
-                            </form>
+                <div id="settings" class="content-panel">
+                    <h1 class="page-title">Settings</h1>
+                    <div class="auth-required">
+                        <div class="empty-state">
+                            <h3>Authentication Required</h3>
+                            <p>Please login to access system settings</p>
                         </div>
                     </div>
-                </div>
-
-                <div id="refresh-settings" class="content-panel">
-                    <h1 class="page-title">Refresh Settings</h1>
-                    <div class="section-card">
-                        <div class="section-header">
-                            <h2>Auto-Refresh Configuration</h2>
-                        </div>
-                        <div class="section-content">
-                            <form id="refreshSettingsForm">
-                                <div class="form-row">
-                                    <div class="form-field">
-                                        <label>Enable Auto-Refresh</label>
-                                        <select id="autoRefresh">
-                                            <option value="true">Enabled</option>
-                                            <option value="false">Disabled</option>
-                                        </select>
+                    <div class="settings-content">
+                        <div class="settings-tabs">
+                            <div class="tab-buttons">
+                                <button class="tab-button active" data-tab="data">Data Collection</button>
+                                <button class="tab-button" data-tab="display">Display</button>
+                                <button class="tab-button" data-tab="alerts">Alerts</button>
+                                <button class="tab-button" data-tab="network">Network</button>
+                                <button class="tab-button" data-tab="monitoring">Monitoring</button>
+                                <button class="tab-button" data-tab="logging">Logging</button>
+                                <button class="tab-button" data-tab="advanced">Advanced</button>
+                                <button class="tab-button" data-tab="system">System</button>
+                            </div>
+                            
+                            <div class="tab-content active" data-tab="data">
+                                <div class="section-card">
+                                    <div class="section-header">
+                                        <h2>Data Collection Settings</h2>
                                     </div>
-                                    <div class="form-field">
-                                        <label>Refresh Interval (seconds)</label>
-                                        <input type="number" id="refreshInterval" min="5" max="300" value="30">
+                                    <div class="section-content">
+                                        <form id="dataCollectionForm">
+                                            <div class="form-field">
+                                                <label for="metricsInterval">Metrics Collection Interval (seconds)</label>
+                                                <input type="number" id="metricsInterval" name="metricsInterval" value="30" min="1" max="300">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="dataRetention">Data Retention (hours)</label>
+                                                <input type="number" id="dataRetention" name="dataRetention" value="24" min="1" max="168">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="cpuSampling">CPU Sampling Method</label>
+                                                <select id="cpuSampling" name="cpuSampling">
+                                                    <option value="average">Average</option>
+                                                    <option value="max">Maximum</option>
+                                                    <option value="min">Minimum</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="tempUnits">Temperature Units</label>
+                                                <select id="tempUnits" name="tempUnits">
+                                                    <option value="celsius">Celsius</option>
+                                                    <option value="fahrenheit">Fahrenheit</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="historyPoints">History Points</label>
+                                                <input type="number" id="historyPoints" name="historyPoints" value="500" min="50" max="2000">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="dataPrecision">Data Precision (decimal places)</label>
+                                                <input type="number" id="dataPrecision" name="dataPrecision" value="2" min="0" max="4">
+                                            </div>
+                                            <div class="button-group">
+                                                <button type="submit" class="btn btn-primary">Save Settings</button>
+                                                <button type="button" class="btn btn-secondary" onclick="resetDataSettings()">Reset to Defaults</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                                <div class="button-group">
-                                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                            </div>
+                            
+                            <div class="tab-content" data-tab="display">
+                                <div class="section-card">
+                                    <div class="section-header">
+                                        <h2>Display Settings</h2>
+                                    </div>
+                                    <div class="section-content">
+                                        <form id="displaySettingsForm">
+                                            <div class="form-field">
+                                                <label for="chartRefresh">Chart Refresh Interval (seconds)</label>
+                                                <input type="number" id="chartRefresh" name="chartRefresh" value="10" min="1" max="60">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="timeFormat">Time Format</label>
+                                                <select id="timeFormat" name="timeFormat">
+                                                    <option value="24h">24 Hour</option>
+                                                    <option value="12h">12 Hour</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="chartAnimation">Chart Animation</label>
+                                                <select id="chartAnimation" name="chartAnimation">
+                                                    <option value="enabled">Enabled</option>
+                                                    <option value="disabled">Disabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="gridLines">Grid Lines</label>
+                                                <select id="gridLines" name="gridLines">
+                                                    <option value="enabled">Enabled</option>
+                                                    <option value="disabled">Disabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="timestampDisplay">Timestamp Display</label>
+                                                <select id="timestampDisplay" name="timestampDisplay">
+                                                    <option value="time">Time Only</option>
+                                                    <option value="datetime">Date & Time</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="maxChartPoints">Maximum Chart Points</label>
+                                                <input type="number" id="maxChartPoints" name="maxChartPoints" value="50" min="20" max="200">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="performanceMode">Performance Mode</label>
+                                                <select id="performanceMode" name="performanceMode">
+                                                    <option value="balanced">Balanced</option>
+                                                    <option value="performance">Performance</option>
+                                                    <option value="high">High Quality</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="autoScale">Auto Scale Charts</label>
+                                                <select id="autoScale" name="autoScale">
+                                                    <option value="enabled">Enabled</option>
+                                                    <option value="disabled">Disabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="button-group">
+                                                <button type="submit" class="btn btn-primary">Save Settings</button>
+                                                <button type="button" class="btn btn-secondary" onclick="resetDisplaySettings()">Reset to Defaults</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-                            </form>
+                            </div>
+                            
+                            <div class="tab-content" data-tab="alerts">
+                                <div class="section-card">
+                                    <div class="section-header">
+                                        <h2>Alert Settings</h2>
+                                    </div>
+                                    <div class="section-content">
+                                        <form id="alertSettingsForm">
+                                            <div class="form-field">
+                                                <label for="cpuWarning">CPU Warning Threshold (%)</label>
+                                                <input type="number" id="cpuWarning" name="cpuWarning" value="80" min="1" max="100">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="cpuCritical">CPU Critical Threshold (%)</label>
+                                                <input type="number" id="cpuCritical" name="cpuCritical" value="95" min="1" max="100">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="memoryWarning">Memory Warning Threshold (%)</label>
+                                                <input type="number" id="memoryWarning" name="memoryWarning" value="85" min="1" max="100">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="memoryCritical">Memory Critical Threshold (%)</label>
+                                                <input type="number" id="memoryCritical" name="memoryCritical" value="95" min="1" max="100">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="tempWarning">Temperature Warning Threshold (°C)</label>
+                                                <input type="number" id="tempWarning" name="tempWarning" value="70" min="1" max="100">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="tempCritical">Temperature Critical Threshold (°C)</label>
+                                                <input type="number" id="tempCritical" name="tempCritical" value="85" min="1" max="100">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="storageWarning">Storage Warning Threshold (%)</label>
+                                                <input type="number" id="storageWarning" name="storageWarning" value="80" min="1" max="100">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="storageCritical">Storage Critical Threshold (%)</label>
+                                                <input type="number" id="storageCritical" name="storageCritical" value="95" min="1" max="100">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="visualAlerts">Visual Alerts</label>
+                                                <select id="visualAlerts" name="visualAlerts">
+                                                    <option value="enabled">Enabled</option>
+                                                    <option value="disabled">Disabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="alertSound">Alert Sound</label>
+                                                <select id="alertSound" name="alertSound">
+                                                    <option value="disabled">Disabled</option>
+                                                    <option value="enabled">Enabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="button-group">
+                                                <button type="submit" class="btn btn-primary">Save Settings</button>
+                                                <button type="button" class="btn btn-secondary" onclick="resetAlertSettings()">Reset to Defaults</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-content" data-tab="network">
+                                <div class="section-card">
+                                    <div class="section-header">
+                                        <h2>Network Settings</h2>
+                                    </div>
+                                    <div class="section-content">
+                                        <form id="networkSettingsForm">
+                                            <div class="form-field">
+                                                <label for="defaultInterface">Default Network Interface</label>
+                                                <select id="defaultInterface" name="defaultInterface">
+                                                    <option value="auto">Auto-detect</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="networkUnits">Network Units</label>
+                                                <select id="networkUnits" name="networkUnits">
+                                                    <option value="bytes">Bytes</option>
+                                                    <option value="bits">Bits</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="monitorAllInterfaces">Monitor All Interfaces</label>
+                                                <select id="monitorAllInterfaces" name="monitorAllInterfaces">
+                                                    <option value="disabled">Disabled</option>
+                                                    <option value="enabled">Enabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="showInterfaceStats">Show Interface Statistics</label>
+                                                <select id="showInterfaceStats" name="showInterfaceStats">
+                                                    <option value="enabled">Enabled</option>
+                                                    <option value="disabled">Disabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="networkPolling">Network Polling Interval (seconds)</label>
+                                                <input type="number" id="networkPolling" name="networkPolling" value="2" min="1" max="10">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="bandwidthDetection">Bandwidth Detection</label>
+                                                <select id="bandwidthDetection" name="bandwidthDetection">
+                                                    <option value="enabled">Enabled</option>
+                                                    <option value="disabled">Disabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="button-group">
+                                                <button type="submit" class="btn btn-primary">Save Settings</button>
+                                                <button type="button" class="btn btn-secondary" onclick="resetNetworkSettings()">Reset to Defaults</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-content" data-tab="monitoring">
+                                <div class="section-card">
+                                    <div class="section-header">
+                                        <h2>Monitoring Settings</h2>
+                                    </div>
+                                    <div class="section-content">
+                                        <form id="systemMonitoringForm">
+                                            <div class="form-field">
+                                                <label for="cpuCoreMonitoring">CPU Core Monitoring</label>
+                                                <select id="cpuCoreMonitoring" name="cpuCoreMonitoring">
+                                                    <option value="enabled">Enabled</option>
+                                                    <option value="disabled">Disabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="processMonitoring">Process Monitoring</label>
+                                                <select id="processMonitoring" name="processMonitoring">
+                                                    <option value="enabled">Enabled</option>
+                                                    <option value="disabled">Disabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="diskIoMonitoring">Disk I/O Monitoring</label>
+                                                <select id="diskIoMonitoring" name="diskIoMonitoring">
+                                                    <option value="enabled">Enabled</option>
+                                                    <option value="disabled">Disabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="smartMonitoring">SMART Monitoring</label>
+                                                <select id="smartMonitoring" name="smartMonitoring">
+                                                    <option value="enabled">Enabled</option>
+                                                    <option value="disabled">Disabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="loadMonitoring">Load Monitoring</label>
+                                                <select id="loadMonitoring" name="loadMonitoring">
+                                                    <option value="enabled">Enabled</option>
+                                                    <option value="disabled">Disabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="serviceMonitoring">Service Monitoring</label>
+                                                <select id="serviceMonitoring" name="serviceMonitoring">
+                                                    <option value="enabled">Enabled</option>
+                                                    <option value="disabled">Disabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="button-group">
+                                                <button type="submit" class="btn btn-primary">Save Settings</button>
+                                                <button type="button" class="btn btn-secondary" onclick="resetMonitoringSettings()">Reset to Defaults</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-content" data-tab="logging">
+                                <div class="section-card">
+                                    <div class="section-header">
+                                        <h2>Logging Settings</h2>
+                                    </div>
+                                    <div class="section-content">
+                                        <form id="loggingSettingsForm">
+                                            <div class="form-field">
+                                                <label for="logLevel">Log Level</label>
+                                                <select id="logLevel" name="logLevel">
+                                                    <option value="debug">Debug</option>
+                                                    <option value="info">Info</option>
+                                                    <option value="warning">Warning</option>
+                                                    <option value="error">Error</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="logRotationSize">Log Rotation Size (MB)</label>
+                                                <input type="number" id="logRotationSize" name="logRotationSize" value="50" min="1" max="500">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="maxLogFiles">Maximum Log Files</label>
+                                                <input type="number" id="maxLogFiles" name="maxLogFiles" value="5" min="1" max="20">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="enableSystemLogging">Enable System Logging</label>
+                                                <select id="enableSystemLogging" name="enableSystemLogging">
+                                                    <option value="enabled">Enabled</option>
+                                                    <option value="disabled">Disabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="logCompression">Log Compression</label>
+                                                <select id="logCompression" name="logCompression">
+                                                    <option value="enabled">Enabled</option>
+                                                    <option value="disabled">Disabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="remoteLogging">Remote Logging</label>
+                                                <select id="remoteLogging" name="remoteLogging">
+                                                    <option value="disabled">Disabled</option>
+                                                    <option value="enabled">Enabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="button-group">
+                                                <button type="submit" class="btn btn-primary">Save Settings</button>
+                                                <button type="button" class="btn btn-secondary" onclick="resetLoggingSettings()">Reset to Defaults</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-content" data-tab="advanced">
+                                <div class="section-card">
+                                    <div class="section-header">
+                                        <h2>Advanced Settings</h2>
+                                    </div>
+                                    <div class="section-content">
+                                        <form id="advancedSettingsForm">
+                                            <div class="form-field">
+                                                <label for="apiRateLimit">API Rate Limit</label>
+                                                <select id="apiRateLimit" name="apiRateLimit">
+                                                    <option value="low">Low</option>
+                                                    <option value="medium">Medium</option>
+                                                    <option value="high">High</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="memoryLimit">Memory Limit (MB)</label>
+                                                <input type="number" id="memoryLimit" name="memoryLimit" value="1024" min="256" max="8192">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="dbCleanup">Database Cleanup</label>
+                                                <select id="dbCleanup" name="dbCleanup">
+                                                    <option value="disabled">Disabled</option>
+                                                    <option value="daily">Daily</option>
+                                                    <option value="weekly">Weekly</option>
+                                                    <option value="monthly">Monthly</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="debugMode">Debug Mode</label>
+                                                <select id="debugMode" name="debugMode">
+                                                    <option value="disabled">Disabled</option>
+                                                    <option value="enabled">Enabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="autoUpdate">Auto Update</label>
+                                                <select id="autoUpdate" name="autoUpdate">
+                                                    <option value="disabled">Disabled</option>
+                                                    <option value="enabled">Enabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="experimentalFeatures">Experimental Features</label>
+                                                <select id="experimentalFeatures" name="experimentalFeatures">
+                                                    <option value="disabled">Disabled</option>
+                                                    <option value="enabled">Enabled</option>
+                                                </select>
+                                            </div>
+                                            <div class="button-group">
+                                                <button type="submit" class="btn btn-primary">Save Settings</button>
+                                                <button type="button" class="btn btn-secondary" onclick="resetAdvancedSettings()">Reset to Defaults</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-content" data-tab="system">
+                                <div class="section-card">
+                                    <div class="section-header">
+                                        <h2>System Management</h2>
+                                    </div>
+                                    <div class="section-content">
+                                        <div class="system-actions">
+                                            <div class="action-group">
+                                                <h3>Data Management</h3>
+                                                <div class="button-group">
+                                                    <button class="btn btn-warning" onclick="clearMetricsData()">Clear Metrics Data</button>
+                                                    <button class="btn btn-warning" onclick="clearCache()">Clear Cache</button>
+                                                    <button class="btn btn-warning" onclick="clearBrowserCache()">Clear Browser Cache</button>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="action-group">
+                                                <h3>Settings Management</h3>
+                                                <div class="button-group">
+                                                    <button class="btn btn-secondary" onclick="exportSettings()">Export Settings</button>
+                                                    <button class="btn btn-secondary" onclick="importSettings()">Import Settings</button>
+                                                    <button class="btn btn-warning" onclick="resetAllSettings()">Reset All Settings</button>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="action-group">
+                                                <h3>System Control</h3>
+                                                <div class="button-group">
+                                                    <button class="btn btn-primary" onclick="restartServices()">Restart Services</button>
+                                                    <button class="btn btn-danger" onclick="factoryReset()">Factory Reset</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="system-status">
+                                            <h3>System Status</h3>
+                                            <div class="status-item">
+                                                <span class="status-label">Current Status:</span>
+                                                <span id="settingsStatus" class="status-value">Ready</span>
+                                            </div>
+                                            <div class="status-item">
+                                                <span class="status-label">Last Settings Change:</span>
+                                                <span id="lastSettingsChange" class="status-value">Never</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -510,6 +891,72 @@
                     <div class="button-group">
                         <button type="submit" class="btn btn-primary">Login</button>
                         <button type="button" class="btn btn-secondary" onclick="closeAuthModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="widgetModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Widget</h2>
+            </div>
+            <div class="modal-body">
+                <form id="widgetForm">
+                    <div class="form-field">
+                        <label>Widget Type</label>
+                        <select id="widget-type" required>
+                            <option value="">Select widget type</option>
+                            <option value="cpu-overall">CPU Usage (Overall)</option>
+                            <option value="cpu-cores">CPU Usage (Per Core)</option>
+                            <option value="cpu-load">CPU Load Average</option>
+                            <option value="memory-usage">Memory Usage (%)</option>
+                            <option value="memory-absolute">Memory Usage (Absolute)</option>
+                            <option value="memory-breakdown">Memory Breakdown</option>
+                            <option value="network-speed">Network Speed</option>
+                            <option value="network-bytes">Network Bytes</option>
+                            <option value="network-packets">Network Packets</option>
+                            <option value="temperature-cpu">CPU Temperature</option>
+                            <option value="temperature-system">System Temperature</option>
+                            <option value="temperature-all">All Temperatures</option>
+                            <option value="storage-usage">Storage Usage</option>
+                            <option value="storage-io">Storage I/O</option>
+                            <option value="uptime">System Uptime</option>
+                            <option value="processes">Process Count</option>
+                            <option value="users">Active Users</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Chart Type</label>
+                        <select id="chart-type" required>
+                            <option value="line">Line Chart</option>
+                            <option value="bar">Bar Chart</option>
+                            <option value="area">Area Chart</option>
+                            <option value="pie">Pie Chart</option>
+                            <option value="doughnut">Doughnut Chart</option>
+                            <option value="gauge">Gauge</option>
+                            <option value="number">Number Display</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Widget Size</label>
+                        <select id="widget-size" required>
+                            <option value="small">Small (1x1)</option>
+                            <option value="medium">Medium (2x1)</option>
+                            <option value="large">Large (2x2)</option>
+                            <option value="wide">Wide (3x1)</option>
+                            <option value="tall">Tall (1x2)</option>
+                            <option value="xlarge">Extra Large (3x2)</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Widget Title</label>
+                        <input type="text" id="widget-title" placeholder="Optional custom title">
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">Add Widget</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeWidgetModal()">Cancel</button>
                     </div>
                 </form>
             </div>

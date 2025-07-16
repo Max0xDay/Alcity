@@ -12,7 +12,15 @@ let metricHistory = {
 const COLLECTION_INTERVAL = 5000;
 const MAX_HISTORY_POINTS = 60;
 
+
+const isRoot = Deno.uid() === 0;
+
 async function executeCommand(command: string): Promise<string> {
+
+  if (isRoot && command.includes('sudo ')) {
+    command = command.replace(/sudo\s+/g, '');
+  }
+  
   const cmd = new Deno.Command("bash", {
     args: ["-c", command],
     stdout: "piped",
