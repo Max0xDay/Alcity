@@ -1,127 +1,521 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Cheese Greater Stats</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alcity - System Monitor</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 </head>
 <body>
-  <div id="background-animation"></div>
-  
-  <div class="container">
-    <h1>The Cheese Greater Stats</h1>
-    
-    <div class="main-tabs">
-      <button class="main-tab-button active" data-tab="metrics">System Metrics</button>
-      <button class="main-tab-button" data-tab="logs">Service Logs</button>
-    </div>
-    
-    <div id="metrics-section" class="tab-section active">
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <h3>CPU Usage</h3>
-          <div class="chart-container">
-            <canvas id="cpu-chart"></canvas>
-          </div>
-          <div class="metric-info">
-            <div id="cpu-current">Current: 0%</div>
-            <div id="cpu-avg">Average: 0%</div>
-          </div>
-        </div>
-        
-        <div class="metric-card">
-          <h3>Memory Usage</h3>
-          <div class="chart-container">
-            <canvas id="memory-chart"></canvas>
-          </div>
-          <div class="metric-info">
-            <div id="memory-current">Current: 0%</div>
-            <div id="memory-total">Total: 0 GB</div>
-          </div>
-        </div>
-                
-        <div class="metric-card full-width">
-          <h3>Network Interface</h3>
-          <div class="network-selector">
-            <label for="interface-select">Interface:</label>
-            <select id="interface-select"></select>
-          </div>
-          <div class="chart-container">
-            <canvas id="network-chart"></canvas>
-          </div>
-          <div class="metric-info">
-            <div id="network-rx">Download: 0 KB/s</div>
-            <div id="network-tx">Upload: 0 KB/s</div>
-          </div>
-        </div>
+    <div class="app-container">
+        <header>
+            <div class="header-content">
+                <div class="title-section">
+                    <h1>Alcity System Monitor</h1>
+                    <div class="subtitle">Real-time System Monitoring & Logs</div>
+                </div>
+                <div class="header-actions">
+                    <div id="auth-status" class="auth-status">Not authenticated</div>
+                    <button id="auth-button" class="btn btn-secondary">Login</button>
+                </div>
+            </div>
+        </header>
 
-        <div class="metric-card full-width">
-          <h3>Drive Information</h3>
-          <div id="disks-container" class="disks-grid">
-            <div class="loading-spinner">Loading drive information...</div>
-          </div>
+        <div class="main-container">
+            <nav class="sidebar">
+                <div class="nav-section">
+                    <div class="nav-header expanded" onclick="toggleSection(this)">
+                        <h3>Dashboard</h3>
+                        <div class="nav-arrow"></div>
+                    </div>
+                    <div class="nav-items expanded">
+                        <div class="nav-item active" onclick="showPanel('overview')">Overview</div>
+                        <div class="nav-item" onclick="showPanel('cpu')">CPU Monitor</div>
+                        <div class="nav-item" onclick="showPanel('memory')">Memory</div>
+                        <div class="nav-item" onclick="showPanel('network')">Network</div>
+                        <div class="nav-item" onclick="showPanel('storage')">Storage</div>
+                        <div class="nav-item" onclick="showPanel('temperature')">Temperature</div>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-header" onclick="toggleSection(this)">
+                        <h3>Application Logs</h3>
+                        <div class="nav-arrow"></div>
+                    </div>
+                    <div class="nav-items">
+                        <div class="nav-item" onclick="showPanel('jellyfin')">Jellyfin</div>
+                        <div class="nav-item" onclick="showPanel('sonarr')">Sonarr</div>
+                        <div class="nav-item" onclick="showPanel('prowlarr')">Prowlarr</div>
+                        <div class="nav-item" onclick="showPanel('radarr')">Radarr</div>
+                        <div class="nav-item" onclick="showPanel('transmission')">Transmission</div>
+                        <div class="nav-item" onclick="showPanel('fail2ban')">Fail2ban</div>
+                        <div class="nav-item" onclick="showPanel('netdata')">Netdata</div>
+                        <div class="nav-item" onclick="showPanel('unify')">Unify</div>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-header" onclick="toggleSection(this)">
+                        <h3>Settings</h3>
+                        <div class="nav-arrow"></div>
+                    </div>
+                    <div class="nav-items">
+                        <div class="nav-item" onclick="showPanel('dashboard-config')">Dashboard Config</div>
+                        <div class="nav-item" onclick="showPanel('refresh-settings')">Refresh Settings</div>
+                    </div>
+                </div>
+            </nav>
+
+            <main class="content-area">
+                <div id="overview" class="content-panel active">
+                    <h1 class="page-title">System Overview</h1>
+                    <div class="stats-grid" id="statsGrid">
+                        <div class="stat-card">
+                            <div class="stat-label">System Uptime</div>
+                            <div class="stat-value" id="system-uptime">Loading...</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">CPU Usage</div>
+                            <div class="stat-value" id="cpu-usage">0%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Memory Usage</div>
+                            <div class="stat-value" id="memory-usage">0%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Network Activity</div>
+                            <div class="stat-value" id="network-activity">0 KB/s</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2>Real-time Monitoring</h2>
+                        </div>
+                        <div class="section-content">
+                            <div class="dashboard-grid" id="dashboardGrid">
+                                <div class="metric-card">
+                                    <h3>CPU Usage</h3>
+                                    <div class="chart-container">
+                                        <canvas id="overview-cpu-chart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <h3>Memory Usage</h3>
+                                    <div class="chart-container">
+                                        <canvas id="overview-memory-chart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="cpu" class="content-panel">
+                    <h1 class="page-title">CPU Monitor</h1>
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2>CPU Performance</h2>
+                        </div>
+                        <div class="section-content">
+                            <div class="metric-card full-width">
+                                <div class="chart-container">
+                                    <canvas id="cpu-chart"></canvas>
+                                </div>
+                                <div class="metric-info">
+                                    <div id="cpu-current">Current: 0%</div>
+                                    <div id="cpu-avg">Average: 0%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="memory" class="content-panel">
+                    <h1 class="page-title">Memory Monitor</h1>
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2>Memory Usage</h2>
+                        </div>
+                        <div class="section-content">
+                            <div class="metric-card full-width">
+                                <div class="chart-container">
+                                    <canvas id="memory-chart"></canvas>
+                                </div>
+                                <div class="metric-info">
+                                    <div id="memory-current">Current: 0%</div>
+                                    <div id="memory-total">Total: 0 GB</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="network" class="content-panel">
+                    <h1 class="page-title">Network Monitor</h1>
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2>Network Interface</h2>
+                        </div>
+                        <div class="section-content">
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label>Interface</label>
+                                    <select id="interface-select"></select>
+                                </div>
+                            </div>
+                            <div class="metric-card full-width">
+                                <div class="chart-container">
+                                    <canvas id="network-chart"></canvas>
+                                </div>
+                                <div class="metric-info">
+                                    <div id="network-rx">Download: 0 KB/s</div>
+                                    <div id="network-tx">Upload: 0 KB/s</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="storage" class="content-panel">
+                    <h1 class="page-title">Storage Monitor</h1>
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2>Drive Information</h2>
+                        </div>
+                        <div class="section-content">
+                            <div id="disks-container" class="disks-grid">
+                                <div class="loading-spinner">Loading drive information...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="temperature" class="content-panel">
+                    <h1 class="page-title">Temperature Monitor</h1>
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2>System Temperatures</h2>
+                        </div>
+                        <div class="section-content">
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label>Chart View</label>
+                                    <select id="temp-type-select">
+                                        <option value="all">All Components</option>
+                                        <option value="cpu">CPU Only</option>
+                                        <option value="gpu">GPU Only</option>
+                                        <option value="system">System Only</option>
+                                        <option value="drives">Drives Only</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="metric-card full-width">
+                                <div class="chart-container">
+                                    <canvas id="temperature-chart"></canvas>
+                                </div>
+                                <div id="temp-not-available" class="alert" style="display: none;">
+                                    <p>Temperature monitoring tools not found.</p>
+                                </div>
+                                <div class="metric-info">
+                                    <div id="temp-info">Components: -</div>
+                                    <div id="temp-max">Max Temperature: -</div>
+                                </div>
+                            </div>
+                            <div id="temperature-categories"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="jellyfin" class="content-panel log-panel">
+                    <h1 class="page-title">Jellyfin Logs</h1>
+                    <div class="auth-required" style="display: none;">
+                        <div class="empty-state">
+                            <h3>Authentication Required</h3>
+                            <p>Please login to view application logs</p>
+                        </div>
+                    </div>
+                    <div class="log-content">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Service Logs</h2>
+                            </div>
+                            <div class="section-content">
+                                <div class="log-container">
+                                    <pre id="jellyfin-log-output">Loading logs...</pre>
+                                </div>
+                                <div class="button-group">
+                                    <button class="btn btn-secondary" onclick="refreshLogs('jellyfin')">Refresh</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sonarr" class="content-panel log-panel">
+                    <h1 class="page-title">Sonarr Logs</h1>
+                    <div class="auth-required" style="display: none;">
+                        <div class="empty-state">
+                            <h3>Authentication Required</h3>
+                            <p>Please login to view application logs</p>
+                        </div>
+                    </div>
+                    <div class="log-content">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Service Logs</h2>
+                            </div>
+                            <div class="section-content">
+                                <div class="log-container">
+                                    <pre id="sonarr-log-output">Loading logs...</pre>
+                                </div>
+                                <div class="button-group">
+                                    <button class="btn btn-secondary" onclick="refreshLogs('sonarr')">Refresh</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="prowlarr" class="content-panel log-panel">
+                    <h1 class="page-title">Prowlarr Logs</h1>
+                    <div class="auth-required" style="display: none;">
+                        <div class="empty-state">
+                            <h3>Authentication Required</h3>
+                            <p>Please login to view application logs</p>
+                        </div>
+                    </div>
+                    <div class="log-content">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Service Logs</h2>
+                            </div>
+                            <div class="section-content">
+                                <div class="log-container">
+                                    <pre id="prowlarr-log-output">Loading logs...</pre>
+                                </div>
+                                <div class="button-group">
+                                    <button class="btn btn-secondary" onclick="refreshLogs('prowlarr')">Refresh</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="radarr" class="content-panel log-panel">
+                    <h1 class="page-title">Radarr Logs</h1>
+                    <div class="auth-required" style="display: none;">
+                        <div class="empty-state">
+                            <h3>Authentication Required</h3>
+                            <p>Please login to view application logs</p>
+                        </div>
+                    </div>
+                    <div class="log-content">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Service Logs</h2>
+                            </div>
+                            <div class="section-content">
+                                <div class="log-container">
+                                    <pre id="radarr-log-output">Loading logs...</pre>
+                                </div>
+                                <div class="button-group">
+                                    <button class="btn btn-secondary" onclick="refreshLogs('radarr')">Refresh</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="transmission" class="content-panel log-panel">
+                    <h1 class="page-title">Transmission Logs</h1>
+                    <div class="auth-required" style="display: none;">
+                        <div class="empty-state">
+                            <h3>Authentication Required</h3>
+                            <p>Please login to view application logs</p>
+                        </div>
+                    </div>
+                    <div class="log-content">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Service Logs</h2>
+                            </div>
+                            <div class="section-content">
+                                <div class="log-container">
+                                    <pre id="transmission-log-output">Loading logs...</pre>
+                                </div>
+                                <div class="button-group">
+                                    <button class="btn btn-secondary" onclick="refreshLogs('transmission-daemon')">Refresh</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="fail2ban" class="content-panel log-panel">
+                    <h1 class="page-title">Fail2ban Logs</h1>
+                    <div class="auth-required" style="display: none;">
+                        <div class="empty-state">
+                            <h3>Authentication Required</h3>
+                            <p>Please login to view application logs</p>
+                        </div>
+                    </div>
+                    <div class="log-content">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Service Logs</h2>
+                            </div>
+                            <div class="section-content">
+                                <div class="log-container">
+                                    <pre id="fail2ban-log-output">Loading logs...</pre>
+                                </div>
+                                <div class="button-group">
+                                    <button class="btn btn-secondary" onclick="refreshLogs('fail2ban')">Refresh</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="netdata" class="content-panel log-panel">
+                    <h1 class="page-title">Netdata Logs</h1>
+                    <div class="auth-required" style="display: none;">
+                        <div class="empty-state">
+                            <h3>Authentication Required</h3>
+                            <p>Please login to view application logs</p>
+                        </div>
+                    </div>
+                    <div class="log-content">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Service Logs</h2>
+                            </div>
+                            <div class="section-content">
+                                <div class="log-container">
+                                    <pre id="netdata-log-output">Loading logs...</pre>
+                                </div>
+                                <div class="button-group">
+                                    <button class="btn btn-secondary" onclick="refreshLogs('netdata')">Refresh</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="unify" class="content-panel log-panel">
+                    <h1 class="page-title">Unify Logs</h1>
+                    <div class="auth-required" style="display: none;">
+                        <div class="empty-state">
+                            <h3>Authentication Required</h3>
+                            <p>Please login to view application logs</p>
+                        </div>
+                    </div>
+                    <div class="log-content">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2>Service Logs</h2>
+                            </div>
+                            <div class="section-content">
+                                <div class="log-container">
+                                    <pre id="unify-log-output">Loading logs...</pre>
+                                </div>
+                                <div class="button-group">
+                                    <button class="btn btn-secondary" onclick="refreshLogs('unify')">Refresh</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dashboard-config" class="content-panel">
+                    <h1 class="page-title">Dashboard Configuration</h1>
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2>Widget Settings</h2>
+                        </div>
+                        <div class="section-content">
+                            <form id="dashboardConfigForm">
+                                <div class="form-row">
+                                    <div class="form-field">
+                                        <label>Chart Type</label>
+                                        <select id="chartType">
+                                            <option value="line">Line Chart</option>
+                                            <option value="bar">Bar Chart</option>
+                                            <option value="area">Area Chart</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Update Interval (seconds)</label>
+                                        <input type="number" id="updateInterval" min="5" max="300" value="30">
+                                    </div>
+                                </div>
+                                <div class="button-group">
+                                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                                    <button type="button" class="btn btn-secondary" onclick="resetDashboard()">Reset to Default</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="refresh-settings" class="content-panel">
+                    <h1 class="page-title">Refresh Settings</h1>
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2>Auto-Refresh Configuration</h2>
+                        </div>
+                        <div class="section-content">
+                            <form id="refreshSettingsForm">
+                                <div class="form-row">
+                                    <div class="form-field">
+                                        <label>Enable Auto-Refresh</label>
+                                        <select id="autoRefresh">
+                                            <option value="true">Enabled</option>
+                                            <option value="false">Disabled</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Refresh Interval (seconds)</label>
+                                        <input type="number" id="refreshInterval" min="5" max="300" value="30">
+                                    </div>
+                                </div>
+                                <div class="button-group">
+                                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
-        
-        <div class="metric-card full-width">
-          <h3>System Temperatures</h3>
-          <div class="temperature-selector">
-            <label for="temp-type-select">Chart View:</label>
-            <select id="temp-type-select">
-              <option value="all">All Components</option>
-              <option value="cpu">CPU Only</option>
-              <option value="gpu">GPU Only</option>
-              <option value="system">System Only</option>
-              <option value="drives">Drives Only</option>
-            </select>
-          </div>
-          <div class="chart-container">
-            <canvas id="temperature-chart"></canvas>
-          </div>
-          <div id="temp-not-available" class="alert" style="display: none;">
-            <p>Temperature monitoring tools not found. Please install required tools:</p>
-            <pre>sudo apt-get install lm-sensors hddtemp smartmontools</pre>
-            <p>Then run sensors detection:</p>
-            <pre>sudo sensors-detect</pre>
-          </div>
-          <div class="metric-info">
-            <div id="temp-info">Components: -</div>
-            <div id="temp-max">Max Temperature: -</div>
-          </div>
-          <div id="temperature-categories"></div>
-        </div>
-      </div>
-      
-      <div class="refresh-container">
-        <button id="refresh-metrics-button">Refresh Metrics</button>
-        <span id="metrics-last-updated"></span>
-      </div>
     </div>
-    
-    <div id="logs-section" class="tab-section">
-      <div class="tabs">
-        <button class="tab-button active" data-service="jellyfin">Jellyfin</button>
-        <button class="tab-button" data-service="sonarr">Sonarr</button>
-        <button class="tab-button" data-service="prowlarr">Prowlarr</button>
-        <button class="tab-button" data-service="radarr">Radarr</button>
-        <button class="tab-button" data-service="transmission-daemon">Transmission</button>
-        <button class="tab-button" data-service="fail2ban">Fail2ban</button>
-        <button class="tab-button" data-service="netdata">Netdata</button>
-        <button class="tab-button" data-service="unify">Unify</button>
-      </div>
-      
-      <div class="log-container">
-        <pre id="log-output">Loading logs...</pre>
-        <div class="refresh-container">
-          <button id="refresh-button">Refresh</button>
-          <span id="last-updated"></span>
+
+    <div id="authModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Authentication Required</h2>
+            </div>
+            <div class="modal-body">
+                <form id="authForm">
+                    <div class="form-field">
+                        <label>Username</label>
+                        <input type="text" id="username" required>
+                    </div>
+                    <div class="form-field">
+                        <label>Password</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeAuthModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  
-  <script src="script.js"></script>
+
+    <script src="script.js"></script>
 </body>
 </html>
